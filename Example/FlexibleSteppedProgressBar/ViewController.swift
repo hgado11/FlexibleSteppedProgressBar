@@ -23,9 +23,9 @@ class ViewController: UIViewController, FlexibleSteppedProgressBarDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupProgressBar()
+       
         setupProgressBarWithoutLastState()
-        setupProgressBarWithDifferentDimensions()
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -38,15 +38,58 @@ class ViewController: UIViewController, FlexibleSteppedProgressBarDelegate {
         self.view.addSubview(progressBarWithoutLastState)
         
         // iOS9+ auto layout code
-        let horizontalConstraint = progressBarWithoutLastState.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
-        let verticalConstraint = progressBarWithoutLastState.topAnchor.constraint(
-            equalTo: view.topAnchor,
-            constant: 300
-        )
-        let widthConstraint = progressBarWithoutLastState.widthAnchor.constraint(equalToConstant: 450)
-        let heightConstraint = progressBarWithoutLastState.heightAnchor.constraint(equalToConstant: 150)
-        NSLayoutConstraint.activate([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
+        if #available(iOS 9.0, *) {
+            let horizontalConstraint = progressBarWithoutLastState.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
         
+            let verticalConstraint = progressBarWithoutLastState.topAnchor.constraint(
+                equalTo: view.topAnchor,
+                constant: 300
+            )
+            let widthConstraint = progressBarWithoutLastState.widthAnchor.constraint(equalToConstant: 450)
+            let heightConstraint = progressBarWithoutLastState.heightAnchor.constraint(equalToConstant: 150)
+        
+            // Fallback on earlier versions
+        
+        NSLayoutConstraint.activate([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
+        }else{
+            let horizontalConstraint =  NSLayoutConstraint(item: progressBarWithoutLastState,
+                                                           attribute: NSLayoutConstraint.Attribute.centerX,
+                                                           relatedBy: NSLayoutConstraint.Relation.equal,
+                                                           toItem: self.view,
+                                                           attribute: NSLayoutConstraint.Attribute.centerY,
+                                                           multiplier: 1.0,
+                                                           constant: 0)
+            
+            let verticalConstraint =  NSLayoutConstraint(item: progressBarWithoutLastState,
+                                                         attribute: NSLayoutConstraint.Attribute.topMargin,
+                                                         relatedBy: NSLayoutConstraint.Relation.equal,
+                                                         toItem: self.view,
+                                                         attribute: NSLayoutConstraint.Attribute.centerY,
+                                                         multiplier: 1.0,
+                                                         constant:0)
+            
+            let widthConstraint = NSLayoutConstraint(item: progressBarWithoutLastState,
+                                                      attribute: NSLayoutConstraint.Attribute.width,
+                                                      relatedBy: NSLayoutConstraint.Relation.equal,
+                                                      toItem: self.view,
+                                                      attribute: NSLayoutConstraint.Attribute.width,
+                                                      multiplier: 1.0,
+                                                      constant:0)
+                                                     
+            _ = NSLayoutConstraint(item: progressBarWithoutLastState,
+                                   attribute: NSLayoutConstraint.Attribute.topMargin,
+                                   relatedBy: NSLayoutConstraint.Relation.equal,
+                                   toItem: self.view,
+                                   attribute: NSLayoutConstraint.Attribute.centerY,
+                                   multiplier: 1.0,
+                                   constant:0)
+            // Fallback on earlier versions
+            
+            NSLayoutConstraint.activate([horizontalConstraint, verticalConstraint, widthConstraint])
+            //progressBarWithoutLastState.frame
+
+            
+        }
         // Customise the progress bar here
         progressBarWithoutLastState.numberOfPoints = 4
         progressBarWithoutLastState.lineHeight = 3
@@ -62,74 +105,6 @@ class ViewController: UIViewController, FlexibleSteppedProgressBarDelegate {
         
         progressBarWithoutLastState.currentIndex = 0
         
-    }
-    
-    func setupProgressBarWithDifferentDimensions() {
-        progressBarWithDifferentDimensions = FlexibleSteppedProgressBar()
-        progressBarWithDifferentDimensions.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(progressBarWithDifferentDimensions)
-        
-        // iOS9+ auto layout code
-        let horizontalConstraint = progressBarWithDifferentDimensions.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
-        let verticalConstraint = progressBarWithDifferentDimensions.topAnchor.constraint(
-            equalTo: view.topAnchor,
-            constant: 450
-        )
-        let widthConstraint = progressBarWithDifferentDimensions.widthAnchor.constraint(equalToConstant: 450)
-        let heightConstraint = progressBarWithDifferentDimensions.heightAnchor.constraint(equalToConstant: 150)
-        NSLayoutConstraint.activate([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
-        
-        
-        progressBarWithDifferentDimensions.numberOfPoints = 5
-        progressBarWithDifferentDimensions.lineHeight = 3
-        progressBarWithDifferentDimensions.radius = 6
-        progressBarWithDifferentDimensions.progressRadius = 11
-        progressBarWithDifferentDimensions.progressLineHeight = 3
-        progressBarWithDifferentDimensions.delegate = self
-        progressBarWithDifferentDimensions.useLastState = true
-        progressBarWithDifferentDimensions.lastStateCenterColor = progressColor
-        progressBarWithDifferentDimensions.selectedBackgoundColor = progressColor
-        progressBarWithDifferentDimensions.selectedOuterCircleStrokeColor = backgroundColor
-        progressBarWithDifferentDimensions.lastStateOuterCircleStrokeColor = backgroundColor
-        progressBarWithDifferentDimensions.currentSelectedCenterColor = progressColor
-        progressBarWithDifferentDimensions.stepTextColor = textColorHere
-        progressBarWithDifferentDimensions.currentSelectedTextColor = progressColor
-        progressBarWithDifferentDimensions.completedTillIndex = 0
-    }
-    
-    func setupProgressBar() {
-        progressBar = FlexibleSteppedProgressBar()
-        progressBar.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(progressBar)
-        
-        // iOS9+ auto layout code
-        let horizontalConstraint = progressBar.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
-        let verticalConstraint = progressBar.topAnchor.constraint(
-            equalTo: view.topAnchor,
-            constant: 80
-        )
-        let widthConstraint = progressBar.widthAnchor.constraint(equalToConstant: CGFloat(450))
-        let heightConstraint = progressBar.heightAnchor.constraint(equalToConstant: CGFloat(150))
-        NSLayoutConstraint.activate([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
-        
-        // Customise the progress bar here
-        progressBar.numberOfPoints = 5
-        progressBar.lineHeight = 9
-        progressBar.radius = 15
-        progressBar.progressRadius = 25
-        progressBar.progressLineHeight = 3
-        progressBar.delegate = self
-        progressBar.completedTillIndex = 2
-        progressBar.useLastState = true
-        progressBar.lastStateCenterColor = progressColor
-        progressBar.selectedBackgoundColor = progressColor
-        progressBar.selectedOuterCircleStrokeColor = backgroundColor
-        progressBar.lastStateOuterCircleStrokeColor = backgroundColor
-        progressBar.currentSelectedCenterColor = progressColor
-        progressBar.currentSelectedTextColor = progressColor
-        
-        
-        progressBar.currentIndex = 0
     }
     
     func progressBar(_ progressBar: FlexibleSteppedProgressBar,
